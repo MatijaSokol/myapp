@@ -26,12 +26,13 @@ jobs:
 
       - name: Run emulator
         run: |
+          echo $ANDROID_HOME
           brew install --cask android-sdk
           
           echo 1111111111111111111111111111111111111111111111111111111111111111111111111111111
           
           cd $ANDROID_HOME/tools/bin
-          sdkmanager "system-images;android-30;google_apis;x86_64"
+#          sdkmanager "system-images;android-30;google_apis;x86_64"
           yes | sdkmanager --licenses
           
           echo 2222222222222222222222222222222222222222222222222222222222222222222222222222222
@@ -41,6 +42,7 @@ jobs:
           echo 3333333333333333333333333333333333333333333333333333333333333333333333333333333
 
           cd $ANDROID_HOME/tools/bin
+#          sdkmanager "system-images;android-30;google_apis;x86_64"
           avdmanager create avd -n first_avd --abi google_apis/x86_64 -k “system-images;android-30;google_apis;x86_64” --stacktrace
           
           echo 4444444444444444444444444444444444444444444444444444444444444444444444444444444
