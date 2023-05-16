@@ -15,28 +15,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-
   instrumentation-test:
-    # The type of runner that the job will run on
     runs-on: macos-latest
 
     steps:
@@ -49,11 +28,23 @@ jobs:
         run: |
           brew install --cask android-sdk
           
+          echo 1111111111111111111111111111111111111111111111111111111111111111111111111111111
+          
           cd $ANDROID_HOME/tools/bin
           yes | sdkmanager --licenses
           
+          echo 2222222222222222222222222222222222222222222222222222222222222222222222222222222
+          
           sdkmanager --install "system-images;android-30;google_apis;x86_64"
+          
+          echo 3333333333333333333333333333333333333333333333333333333333333333333333333333333
 
           avdmanager create avd -n first_avd --abi google_apis/x86_64 -k “system-images;android-30;google_apis;x86_64” --stacktrace
+          
+          echo 4444444444444444444444444444444444444444444444444444444444444444444444444444444
+          
           emulator -avd first_avd -no-window -no-audio &
+          
+          echo 5555555555555555555555555555555555555555555555555555555555555555555555555555555
+          
           ./gradlew cAT
