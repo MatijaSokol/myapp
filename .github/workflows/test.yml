@@ -31,6 +31,7 @@ jobs:
           echo 1111111111111111111111111111111111111111111111111111111111111111111111111111111
           
           cd $ANDROID_HOME/tools/bin
+          sdkmanager "system-images;android-30;google_apis;x86_64"
           yes | sdkmanager --licenses
           
           echo 2222222222222222222222222222222222222222222222222222222222222222222222222222222
