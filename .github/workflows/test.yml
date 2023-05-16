@@ -49,12 +49,12 @@ jobs:
         run: |
           brew install --cask android-sdk
           
-          ./sdkmanager --install "system-images;android-30;google_apis;x86_64"
+          sdkmanager --install "system-images;android-30;google_apis;x86_64"
 
           cd $ANDROID_HOME/tools/bin
-          ./sdkmanager "system-images;android-30;google_apis;x86_64"
-          ./sdkmanager --licenses
+          sdkmanager "system-images;android-30;google_apis;x86_64"
+          sdkmanager --licenses
 
-          ./avdmanager create avd -n first_avd --abi google_apis/x86_64 -k “system-images;android-30;google_apis;x86_64” --stacktrace
+          avdmanager create avd -n first_avd --abi google_apis/x86_64 -k “system-images;android-30;google_apis;x86_64” --stacktrace
           emulator -avd first_avd -no-window -no-audio &
           ./gradlew cAT
