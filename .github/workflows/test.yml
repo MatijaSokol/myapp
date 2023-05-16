@@ -49,6 +49,9 @@ jobs:
         run: |
           brew install --cask android-sdk
           
+          cd $ANDROID_HOME/tools/bin
+          sdkmanager --licenses
+          
           sdkmanager --install "system-images;android-30;google_apis;x86_64"
 
           cd $ANDROID_HOME/tools/bin
