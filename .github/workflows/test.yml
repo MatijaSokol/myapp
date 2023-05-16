@@ -47,6 +47,8 @@ jobs:
 
       - name: Run emulator
         run: |
+          brew install --cask android-sdk
+          
           ./sdkmanager --install "system-images;android-30;google_apis;x86_64"
 
           cd $ANDROID_HOME/tools/bin
