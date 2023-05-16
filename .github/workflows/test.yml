@@ -18,10 +18,11 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: ./gradlew connectedCheck --stacktrace
