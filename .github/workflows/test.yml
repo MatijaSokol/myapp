@@ -25,4 +25,5 @@ jobs:
         with:
           api-level: 29
           emulator-options: -no-window
-          script: ./gradlew connectedCheck --stacktrace
+          run: |
+            gradlew connectedCheck --stacktrace
