@@ -13,42 +13,40 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   instrumentation-test:
     runs-on: macos-latest
-
     steps:
-      - uses: actions/checkout@v2
+      - name: checkout
+        uses: actions/checkout@v3
 
       - name: Gradle cache
         uses: gradle/gradle-build-action@v2
 
-      - name: Run emulator
-        run: |
-          echo $ANDROID_HOME
-          brew install --cask android-sdk
-          
-          echo 1111111111111111111111111111111111111111111111111111111111111111111111111111111
-          
-          cd $ANDROID_HOME/tools/bin
-          yes | sdkmanager --licenses
-          
-          echo 2222222222222222222222222222222222222222222222222222222222222222222222222222222
-          
-          sdkmanager --install "system-images;android-30;google_apis;x86_64"
-          
-          echo 3333333333333333333333333333333333333333333333333333333333333333333333333333333
-          
-          sdkmanager --list
+      - name: AVD cache
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
 
-          cd $ANDROID_HOME/tools/bin
-          avdmanager create avd -n first_avd --abi google_apis/x86_64 -k “system-images;android-30;google_apis;x86_64” --stacktrace
-          
-          echo 4444444444444444444444444444444444444444444444444444444444444444444444444444444
-          
-          emulator -avd first_avd -no-window -no-audio &
-          
-          echo 5555555555555555555555555555555555555555555555555555555555555555555555555555555
-          
-          ./gradlew cAT
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew cAT
