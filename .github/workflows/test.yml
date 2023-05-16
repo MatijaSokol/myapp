@@ -34,3 +34,25 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+  instrumentation-test:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+
+      - name: Run emulator
+        run: |
+          sdkmanager --install "system-images;android-30;google_apis;x86_64"
+
+          cd $ANDROID_HOME/tools/bin
+          sdkmanager "system-images;android-30;google_apis;x86_64"
+          sdkmanager --licenses
+
+          avdmanager create avd -n first_avd --abi google_apis/x86_64 -k “system-images;android-30;google_apis;x86_64” --stacktrace
+          emulator -avd first_avd -no-window -no-audio &
+          ./gradlew cAT
