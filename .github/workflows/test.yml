@@ -39,6 +39,8 @@ jobs:
           sdkmanager --install "system-images;android-30;google_apis;x86_64"
           
           echo 3333333333333333333333333333333333333333333333333333333333333333333333333333333
+          
+          sdkmanager --list
 
           cd $ANDROID_HOME/tools/bin
           avdmanager create avd -n first_avd --abi google_apis/x86_64 -k “system-images;android-30;google_apis;x86_64” --stacktrace
