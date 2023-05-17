@@ -28,12 +28,21 @@ jobs:
           distribution: 'adopt'
 
       - name: Install Android SDK
-        uses: android/setup-android-sdk@v2
+        run: |
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip -O android-sdk.zip
+          unzip -q android-sdk.zip -d $HOME/android-sdk
+          export ANDROID_SDK_ROOT=$HOME/android-sdk
+          export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
+
+      - name: Accept Android licenses
+        run: yes | sdkmanager --licenses
+
+      - name: Install Android system image
+        run: sdkmanager "system-images;android-30;google_apis;x86_64"
 
       - name: Create and start emulator
         run: |
-          sdkmanager "system-images;android-30;google_apis;x86"
-          echo "no" | avdmanager --verbose create avd --force --name test_emulator --package "system-images;android-30;google_apis;x86" --tag "google_apis" --abi "x86"
+          echo "no" | avdmanager --verbose create avd --force --name test_emulator --package "system-images;android-30;google_apis;x86_64" --tag "google_apis" --abi "x86_64"
           emulator -avd test_emulator -noaudio -no-window -gpu swiftshader_indirect -no-snapshot -no-accel -wipe-data -no-boot-anim -dns-server 8.8.8.8 &
 
       - name: Wait for emulator to start
