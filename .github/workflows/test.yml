@@ -39,7 +39,7 @@ jobs:
       - name: Create Android Emulator
         run: |
           sdkmanager --install "system-images;android-30;google_apis;x86_64"
-          avdmanager create avd --name test-emulator --package "system-images;android-30;google_apis;x86_64" --device "pixel" --sdcard 100M --force --verbose
+          avdmanager create avd --name test-emulator --package "system-images;android-30;google_apis;x86_64" --device "pixel" --sdcard 100M --force
           emulator -avd test-emulator -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -dns-server 8.8.8.8 &
 
           # Wait for the emulator to start
