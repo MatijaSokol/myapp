@@ -35,7 +35,7 @@ jobs:
           
           echo 1111111111111111111111111111111111111111111111111111111111111111111
 
-          avdmanager create avd -n first_avd --abi google_apis/x86_64 -k "system-images;android-30;google_apis;x86_64" -v --verbose        
+          avdmanager create avd -n first_avd --abi google_apis/x86_64 -k "system-images;android-30;google_apis;x86_64"        
           
           emulator -avd first_avd -no-window -no-audio &
           ./gradlew cAT
