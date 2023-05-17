@@ -32,8 +32,10 @@ jobs:
           yes | sdkmanager --licenses
 
           sdkmanager --install "system-images;android-30;google_apis;x86_64"
+          
+          echo 1111111111111111111111111111111111111111111111111111111111111111111
 
-          avdmanager create avd -n first_avd --abi google_apis/x86_64 -k "system-images;android-30;google_apis;x86_64"        
+          avdmanager create avd -n first_avd --abi google_apis/x86_64 -k "system-images;android-30;google_apis;x86_64" --verbose        
           
           emulator -avd first_avd -no-window -no-audio &
           ./gradlew cAT
