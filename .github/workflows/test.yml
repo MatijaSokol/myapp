@@ -30,6 +30,11 @@ jobs:
           cd $ANDROID_HOME/tools/bin
           sdkmanager "system-images;android-30;google_apis;x86_64"
           yes | sdkmanager --licenses
+          
+          echo 0000000000000000000000000000000000000000000000000000000000000000000
+          
+          ~/Library/Android/sdk/tools/
+          ./emulator -list-avds  
 
           sdkmanager --install "system-images;android-30;google_apis;x86_64"
           
