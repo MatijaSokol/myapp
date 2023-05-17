@@ -35,10 +35,10 @@ jobs:
           export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
 
       - name: Accept Android licenses
-        run: yes | sdkmanager --licenses
+        run: yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
 
       - name: Install Android system image
-        run: sdkmanager "system-images;android-30;google_apis;x86_64"
+        run: $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "system-images;android-30;google_apis;x86_64"
 
       - name: Create and start emulator
         run: |
