@@ -48,6 +48,7 @@ jobs:
       - name: Start emulator
         run: |
           $ANDROID_SDK_ROOT/emulator/emulator -avd test_emulator -no-audio -no-window -gpu swiftshader_indirect -no-snapshot -no-accel -wipe-data -no-boot-anim -dns-server 8.8.8.8 &
+          android-wait-for-emulator
 
       - name: Wait for emulator to start
         run: |
