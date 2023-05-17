@@ -20,13 +20,12 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
-      - name: set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-
       - name: Run emulator
         run: |
+          brew cask uninstall java
+          brew tap homebrew/cask-versions
+          brew cask install homebrew/cask-versions/adoptopenjdk11
+          touch ~/.android/repositories.cfg
           brew install --cask android-sdk
 
           cd $ANDROID_HOME/tools/bin
