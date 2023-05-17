@@ -60,6 +60,9 @@ jobs:
 
       - name: Build and run instrumented tests
         run: |
+          echo 11111111111111111111111111111111111111111111
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --list
+          echo 222222222222222222222222222222222222222222222
           ./gradlew connectedCheck &
 
           # Wait for 15 minutes or until the process finishes
