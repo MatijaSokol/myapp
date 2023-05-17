@@ -27,6 +27,18 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
+      - name: Install Android SDK
+        uses: android/setup-android-sdk@v2
+
+      - name: Create and start emulator
+        run: |
+          sdkmanager "system-images;android-30;google_apis;x86"
+          echo "no" | avdmanager --verbose create avd --force --name test_emulator --package "system-images;android-30;google_apis;x86" --tag "google_apis" --abi "x86"
+          emulator -avd test_emulator -noaudio -no-window -gpu swiftshader_indirect -no-snapshot -no-accel -wipe-data -no-boot-anim -dns-server 8.8.8.8 &
+
+      - name: Wait for emulator to start
+        run: adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+
       - name: Build and run instrumented tests
         run: |
           ./gradlew clean build connectedCheck
