@@ -25,10 +25,17 @@ jobs:
         with:
           java-version: 11
 
-      - name: run tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          emulator-options: -no-window
-          target: google_apis
-          script: ./gradlew connectedCheck
+      - name: Run emulator
+        run: |
+          brew install --cask android-sdk
+
+          cd $ANDROID_HOME/tools/bin
+          sdkmanager "system-images;android-30;google_apis;x86_64"
+          yes | sdkmanager --licenses
+
+          sdkmanager --install "system-images;android-30;google_apis;x86_64"
+
+          avdmanager create avd -n first_avd --abi google_apis/x86_64 -k "system-images;android-30;google_apis;x86_64" --stacktrace        
+          
+          emulator -avd first_avd -no-window -no-audio &
+          ./gradlew cAT
