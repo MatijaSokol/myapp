@@ -34,8 +34,10 @@ jobs:
           sdkmanager --install "system-images;android-30;google_apis;x86_64"
           
           echo 1111111111111111111111111111111111111111111111111111111111111111111
+          
+          echo "no" | avdmanager --verbose create avd --force --name "pixel_5_api30_google_atd_emulator" --package "system-images;android-30;google_atd;arm64-v8a" --tag "google_atd" --abi "arm64-v8a" --device "pixel_5"
 
-          avdmanager create avd -n first_avd --abi google_apis/x86_64 -k "system-images;android-30;google_apis;x86_64"        
+          echo 2222222222222222222222222222222222222222222222222222222222222222222
           
           emulator -avd first_avd -no-window -no-audio &
           ./gradlew cAT
