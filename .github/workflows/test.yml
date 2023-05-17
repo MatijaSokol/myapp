@@ -23,7 +23,7 @@ jobs:
       - name: Run emulator
         run: |
           brew tap AdoptOpenJDK/openjdk
-          brew install --cask adoptopenjdk11
+          brew install --cask adoptopenjdk8
           touch ~/.android/repositories.cfg
           brew install --cask android-sdk
 
