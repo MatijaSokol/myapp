@@ -48,7 +48,12 @@ jobs:
       - name: Start emulator
         run: |
           $ANDROID_SDK_ROOT/emulator/emulator -avd test_emulator -no-audio -no-window -gpu swiftshader_indirect -no-snapshot -no-accel -wipe-data -no-boot-anim -dns-server 8.8.8.8 &
-          sleep 30 # Add a delay to allow the emulator to start
+
+      - name: Wait for emulator to start
+        run: |
+          export ANDROID_HOME=$ANDROID_SDK_ROOT
+          export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
 
       - name: Clean and build project
         run: ./gradlew clean assembleDebug
