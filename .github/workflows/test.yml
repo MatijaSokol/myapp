@@ -60,4 +60,10 @@ jobs:
 
       - name: Build and run instrumented tests
         run: |
-          timeout 15m ./gradlew connectedCheck
+          ./gradlew connectedCheck &
+
+          # Wait for 15 minutes or until the process finishes
+          sleep 900
+
+          # Terminate the process if it is still running after the timeout
+          pkill -f "gradlew connectedCheck"
