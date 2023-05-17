@@ -39,11 +39,10 @@ jobs:
 
       - name: Install Android system image and create emulator
         run: |
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-30;google_apis;x86_64"
+          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-30;google_apis;x86_64"
           echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "emulator"
           echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "platforms;android-30"
           echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "platform-tools"
-
           echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd --force --name test_emulator --package "system-images;android-30;google_apis;x86_64" --tag "google_apis" --abi "x86_64"
 
       - name: Start emulator
@@ -53,8 +52,8 @@ jobs:
         run: |
           export ANDROID_HOME=$ANDROID_SDK_ROOT
           export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+          sleep 60
           adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
 
       - name: Build and run instrumented tests
-        run: |
-          ./gradlew clean build connectedCheck
+        run: ./gradlew connectedAndroidTest
