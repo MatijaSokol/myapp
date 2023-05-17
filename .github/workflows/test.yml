@@ -13,6 +13,12 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+name: Instrumented Tests
+
+on:
+  push:
+  pull_request:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -39,18 +45,21 @@ jobs:
 
       - name: Install Android system image and create emulator
         run: |
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-30;google_apis;x86_64"
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-30;google_apis;x86"
           echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "emulator"
           echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "platforms;android-30"
           echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "platform-tools"
 
-          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd --force --name test_emulator --package "system-images;android-30;google_apis;x86_64" --tag "google_apis" --abi "x86_64"
+          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd --force --name test_emulator --package "system-images;android-30;google_apis;x86" --tag "google_apis" --abi "x86"
 
       - name: Start emulator
         run: $ANDROID_SDK_ROOT/emulator/emulator -avd test_emulator -noaudio -no-window -gpu swiftshader_indirect -no-snapshot -no-accel -wipe-data -no-boot-anim -dns-server 8.8.8.8 &
 
       - name: Wait for emulator to start
-        run: adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+        run: |
+          export ANDROID_HOME=$ANDROID_SDK_ROOT
+          export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
 
       - name: Build and run instrumented tests
         run: |
