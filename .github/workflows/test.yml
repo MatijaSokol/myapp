@@ -14,35 +14,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
-    runs-on: macos-latest
+  build:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Run emulator
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+
+      - name: Build and run instrumented tests
         run: |
-          brew tap AdoptOpenJDK/openjdk
-          brew install --cask adoptopenjdk8
-          touch ~/.android/repositories.cfg
-          brew install --cask android-sdk
-
-          cd $ANDROID_HOME/tools/bin
-          sdkmanager "system-images;android-30;google_apis;x86_64"
-          yes | sdkmanager --licenses
-          
-          echo 0000000000000000000000000000000000000000000000000000000000000000000
-          
-        
-          emulator -list-avds  
-
-          sdkmanager --install "system-images;android-30;google_apis;x86_64"
-          
-          echo 1111111111111111111111111111111111111111111111111111111111111111111
-          
-          avdmanager --verbose create avd -n first_avd --abi google_apis/x86_64 -k "system-images;android-30;google_apis;x86_64"   
-          
-          echo 2222222222222222222222222222222222222222222222222222222222222222222
-          
-          emulator -avd first_avd -no-window -no-audio &
-          ./gradlew cAT
+          ./gradlew clean build connectedCheck
