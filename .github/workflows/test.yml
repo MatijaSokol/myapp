@@ -26,6 +26,8 @@ jobs:
 
       - name: Run emulator
         run: |
+          brew install --cask homebrew/cask-versions/temurin11
+          
           echo $ANDROID_HOME
           brew install --cask android-sdk
           
