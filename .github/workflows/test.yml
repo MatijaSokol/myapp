@@ -13,66 +13,32 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
+  instrumentation-test:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
 
-      - name: Install Android SDK
+      - name: Run emulator
         run: |
-          wget -q https://dl.google.com/android/repository/commandlinetools-mac-7583922_latest.zip -O android-sdk.zip
-          unzip -q android-sdk.zip -d $HOME/android-sdk
-          export ANDROID_SDK_ROOT=$HOME/android-sdk
-          export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
-
-      - name: Accept Android licenses
-        run: yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
-
-      - name: Create Android emulator
-        run: |
-          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-29;google_apis;x86_64"
-          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "emulator"
-          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "platforms;android-29"
-          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "platform-tools"
-          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd --force --name test_emulator --package "system-images;android-29;google_apis;x86_64" --tag "google_apis" --abi "x86_64"
-
-      - name: Start emulator
-        run: |
-          $ANDROID_SDK_ROOT/emulator/emulator -avd test_emulator -no-audio -no-window -gpu swiftshader_indirect -no-snapshot -no-accel -wipe-data -no-boot-anim -dns-server 8.8.8.8 &
-
-      - name: Wait for emulator to start
-        run: |
-          export ANDROID_HOME=$ANDROID_SDK_ROOT
-          export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
-          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
-
-      - name: Clean and build project
-        run: ./gradlew clean assembleDebug
-
-      - name: Log info
-        run: |
-          echo "List AVDs"
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager list avd
-
-      - name: Build and run instrumented tests
-        run: |
-          while ! "$ANDROID_HOME/platform-tools/adb" shell getprop ro.build.version.sdk; do sleep 1; done
+          echo $ANDROID_HOME
+          brew install --cask android-sdk
           
-          echo "Test started"
+          cd $ANDROID_HOME/tools/bin
+          yes | sdkmanager --licenses
           
-          ./gradlew connectedCheck &
+          sdkmanager --install "system-images;android-29;google_apis;x86_64"
+          
+          sdkmanager --list
 
-          # Wait for 15 minutes or until the process finishes
-          sleep 900
-
-          # Terminate the process if it is still running after the timeout
-          pkill -f "gradlew connectedCheck"
+          cd $ANDROID_HOME/tools/bin
+          avdmanager create avd -n first_avd --abi google_apis/x86_64 -k “system-images;android-29;google_apis;x86_64” --stacktrace
+          
+          emulator -avd first_avd -no-window -no-audio &
+          
+          ./gradlew cAT
