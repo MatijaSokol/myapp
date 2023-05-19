@@ -58,7 +58,7 @@ jobs:
 #      - name: Clean and build project
 #        run: ./gradlew clean assembleDebug
 
-      - name: Build and run instrumented tests
+      - name: Log info
         run: |
           echo 11111111111111111111111111111111111111111111
           $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --list
@@ -68,7 +68,9 @@ jobs:
           $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager list avd
           echo 4444444444444444444444444444444444444444444444
           $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager list targets
-          
+
+      - name: Build and run instrumented tests
+        run: |
           while ! "$ANDROID_HOME/platform-tools/adb" shell getprop ro.build.version.sdk; do sleep 1; done
           
           ./gradlew connectedCheck &
