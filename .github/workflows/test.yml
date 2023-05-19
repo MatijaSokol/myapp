@@ -48,6 +48,7 @@ jobs:
       - name: Start emulator
         run: |
           $ANDROID_SDK_ROOT/emulator/emulator -avd test_emulator -no-audio -no-window -gpu swiftshader_indirect -no-snapshot -no-accel -wipe-data -no-boot-anim -dns-server 8.8.8.8 &
+          android-wait-for-emulator
 
       - name: Wait for emulator to start
         run: |
@@ -60,18 +61,14 @@ jobs:
 
       - name: Log info
         run: |
-          echo "List SDK"
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --list
           echo "List AVDs"
-          $ANDROID_SDK_ROOT/emulator/emulator -list-avds
-          echo "List AVDs 2"
           $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager list avd
-          echo "List targets"
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager list targets
 
       - name: Build and run instrumented tests
         run: |
           while ! "$ANDROID_HOME/platform-tools/adb" shell getprop ro.build.version.sdk; do sleep 1; done
+          
+          echo "Test started"
           
           ./gradlew connectedCheck &
 
