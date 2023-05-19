@@ -55,8 +55,8 @@ jobs:
           export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
           adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
 
-      - name: Clean and build project
-        run: ./gradlew clean assembleDebug
+#      - name: Clean and build project
+#        run: ./gradlew clean assembleDebug
 
       - name: Log info
         run: |
