@@ -53,7 +53,7 @@ jobs:
         run: |
           export ANDROID_HOME=$ANDROID_SDK_ROOT
           export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
-          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+#          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
 
       - name: Clean and build project
         run: ./gradlew clean assembleDebug
@@ -65,7 +65,7 @@ jobs:
 
       - name: Build and run instrumented tests
         run: |
-          while ! "$ANDROID_HOME/platform-tools/adb" shell getprop ro.build.version.sdk; do sleep 1; done
+#          while ! "$ANDROID_HOME/platform-tools/adb" shell getprop ro.build.version.sdk; do sleep 1; done
           
           echo "Test started"
           
