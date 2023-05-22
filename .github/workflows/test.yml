@@ -39,11 +39,11 @@ jobs:
 
       - name: Create Android emulator
         run: |
-          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-29;google_apis;x86_64"
+          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-30;google_apis;x86_64"
           echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "emulator"
-          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "platforms;android-29"
+          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "platforms;android-30"
           echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "platform-tools"
-          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd --force --name test_emulator --package "system-images;android-29;google_apis;x86_64" --tag "google_apis" --abi "x86_64"
+          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd --force --name test_emulator --package "system-images;android-30;google_apis;x86_64" --tag "google_apis" --abi "x86_64"
 
       - name: Start emulator
         run: |
