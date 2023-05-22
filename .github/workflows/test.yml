@@ -72,6 +72,10 @@ jobs:
           
           echo "Test started"
           
+          adb uninstall com.example.myapplication.test
+          
+          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+          
           ./gradlew connectedCheck &
 
           # Wait for 15 minutes or until the process finishes
