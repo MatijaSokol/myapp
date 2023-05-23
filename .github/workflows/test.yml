@@ -58,4 +58,10 @@ jobs:
       - name: Build and run instrumented tests
         run: |
           echo "Test started"
-          ./gradlew connectedCheck --continue
+          ./gradlew connectedCheck --continue --stacktrace
+
+      - name: Upload artifact
+      - uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: file:///Users/runner/work/myapp/myapp/app/build/reports/androidTests/connected/index.html
