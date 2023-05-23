@@ -13,7 +13,9 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        api-level: [ 29 ]
+        arch: [ x86_64 ]
+        target: [ google_apis ]
+        api-level: [ 26 ]
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -40,18 +42,20 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
+          target: ${{ matrix.target }}
+          arch: ${{ matrix.arch }}
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
-          target: google_apis
           script: echo "Generated AVD snapshot for caching."
 
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
+          target: ${{ matrix.target }}
+          arch: ${{ matrix.arch }}
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          target: google_apis
           script: ./gradlew connectedCheck
