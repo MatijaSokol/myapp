@@ -43,6 +43,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
+          target: google_apis
           script: echo "Generated AVD snapshot for caching."
 
       - name: Run tests
@@ -52,4 +53,5 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
+          target: google_apis
           script: ./gradlew connectedCheck
