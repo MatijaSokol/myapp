@@ -4,16 +4,16 @@ on:
   workflow_dispatch:
     inputs:
       api-level:
-        name: API level
         type: choice
+        required: true
         options: [ 28, 29, 30, 31, 32, 33 ]
       target:
-        name: Target
         type: choice
+        required: true
         options: [ google_apis, default, playstore ]
       arch:
-        name: Processor architecture
         type: choice
+        required: true
         options: [ arm64-v8a, x86_64, x86 ]
 
 jobs:
